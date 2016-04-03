@@ -1,0 +1,22 @@
+{
+  "name": "socket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "latest",
+    "socket.io": "latest",
+    "mongoose": "latest",
+    "method-override": "latest",
+    "body-parser": "latest"
+  },
+  "devDependencies": {
+    "nodemon": "latest"
+  }
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+</head>
+<body>
+<h1>My App</h1>
+
+
+
+    <select name="sala" id="sala" onchange="connect(this)">
+        <option value="">Seleccionar Sala</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+    </select>
+
+
+<div id="html"></div>
+
+<form onsubmit="return addMenssage(this)">
+    <input type="text" id="usuario" placeholder="Tu nombre">
+    <input type="text" id="texto" placeholder="Texto a enviar">
+    <input type="submit" value="Enviar">
+</form>
+</body>
+</html>
