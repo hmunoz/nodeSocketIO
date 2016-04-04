@@ -3,10 +3,13 @@ var Message  = mongoose.model('Message');
 
 
 function changeCrossControl(res){
+    
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
     res.header("Access-Control-Max-Age", "3600");
     res.header("Access-Control-Allow-Headers", "x-requested-with");
+    res.header("Content-Type", "application/x-www-form-urlencoded");
+
 }
 
 //GET - Return all tvshows in the DB
@@ -41,7 +44,7 @@ exports.add = function(req, res) {
     changeCrossControl(res);
 
     console.log('POST');
-    console.log(req.body);
+    console.log(req.body.autor);
 
     var message = new Message({
         autor:    req.body.autor,

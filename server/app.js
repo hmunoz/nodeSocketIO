@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
     socket.to(sala).emit('messages', menssages);
 
     socket.on('new-menssage', function (data) {
-        console.log("new-menssage:" + data.text);
+        console.log("new-menssage:" + data.texto);
         menssages.push(data);
         io.to(data.sala).emit('messages', menssages);
     })
