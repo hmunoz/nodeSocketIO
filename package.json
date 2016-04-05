@@ -21,12 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hmunoz/angularDemo.git"
+    "url": "git+https://github.com/hmunoz/nodeSocketIO.git"
   },
   "author": "hmunoz@unrn.edu.ar",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hmunoz/angularDemo/issues"
+    "url": "https://github.com/hmunoz/nodeSocketIO/issues"
   },
-  "homepage": "https://github.com/hmunoz/angularDemo#readme"
+  "homepage": "https://github.com/hmunoz/nodeSocketIO#readme"
 }
