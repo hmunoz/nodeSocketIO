@@ -18,5 +18,15 @@
   },
   "devDependencies": {
     "nodemon": "latest"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmunoz/angularDemo.git"
+  },
+  "author": "hmunoz@unrn.edu.ar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hmunoz/angularDemo/issues"
+  },
+  "homepage": "https://github.com/hmunoz/angularDemo#readme"
 }
