@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var Message  = mongoose.model('Message');
+var Todo  = mongoose.model('Todo');
 
 
 function changeCrossControl(res){
@@ -16,11 +16,11 @@ function changeCrossControl(res){
 exports.findAll = function(req, res) {
 
     changeCrossControl(res);
-    Message.find(function(err, messages) {
+    Todo.find(function(err, todos) {
         if(err) res.send(500, err.message);
 
         console.log('GET /findAll')
-        res.status(200).jsonp(messages);
+        res.status(200).jsonp(todos);
     });
 };
 
@@ -29,11 +29,11 @@ exports.findById = function(req, res) {
 
     changeCrossControl(res);
 
-    Message.findById(req.params.id, function(err, message) {
+    Todo.findById(req.params.id, function(err, todo) {
         if(err) return res.send(500, err.message);
 
         console.log('GET /findById/' + req.params.id);
-        res.status(200).jsonp(message);
+        res.status(200).jsonp(todo);
     });
 };
 
@@ -44,16 +44,17 @@ exports.add = function(req, res) {
     changeCrossControl(res);
 
     console.log('POST');
-    console.log(req.body.autor);
+    console.log(req.body.linea);
 
-    var message = new Message({
+    var todo = new Todo({
         autor:    req.body.autor,
-        texto: 	  req.body.texto
+        texto: 	  req.body.texto,
+        linea: 	  req.body.linea
     });
 
-    message.save(function(err, message) {
+    todo.save(function(err, todo) {
         if(err) return res.send(500, err.message);
-        res.status(200).jsonp(message);
+        res.status(200).jsonp(todo);
     });
 };
 
@@ -62,15 +63,16 @@ exports.add = function(req, res) {
 exports.update = function(req, res) {
     changeCrossControl(res);
 
-    Message.findById(req.params.id, function(err, message) {
+    Todo.findById(req.params.id, function(err, todo) {
 
-        message.autor   = req.body.autor;
-        message.texto    = req.body.texto;
+        todo.autor   = req.body.autor;
+        todo.texto    = req.body.texto;
+        todo.linea    = req.body.linea;
 
 
-        message.save(function(err) {
+        todo.save(function(err) {
             if(err) return res.send(500, err.message);
-            res.status(200).jsonp(message);
+            res.status(200).jsonp(todo);
         });
     });
 };
@@ -80,7 +82,7 @@ exports.delete = function(req, res) {
     changeCrossControl(res);
 
     console.log('DELETE /delete');
-    Message.remove({ id: req.params.id}, function(err){
+    Todo.remove({ id: req.params.id}, function(err){
         if(err) return res.send(500, err.message);
         res.status(200);
     });

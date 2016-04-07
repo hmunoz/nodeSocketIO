@@ -13,7 +13,7 @@ var express         = require("express"),
 
 
 //Conectar a la DB
-mongoose.connect('mongodb://localhost/iot', function (error,res) {
+mongoose.connect('mongodb://localhost/iot_dev', function (error,res) {
     if (error) console.log("Error: Base de Datos" + error);
     else  console.log("Conectada a la Base Mongo");
 });
@@ -31,8 +31,8 @@ app.use(methodOverride());
 
 
 // Import Models and controllers
-var modelsMessagedb     = require('./models/messagedb')(app, mongoose);
-var MessageCrt = require('./controllers/message');
+var modelTododb     = require('./models/tododb')(app, mongoose);
+var todoCrt = require('./controllers/todoCrt');
 
 
 
@@ -45,31 +45,31 @@ router.get('/', function(req, res) {
 app.use(router);
 
 // API routes
-var messagesRuta= express.Router();
+var todoRuta= express.Router();
 
-messagesRuta.route('/message')
-    .get(MessageCrt.findAll)
-    .post(MessageCrt.add);
+todoRuta.route('/todo')
+    .get(todoCrt.findAll)
+    .post(todoCrt.add);
 
-messagesRuta.route('/message/:id')
-    .get(MessageCrt.findById)
-    .put(MessageCrt.update)
-    .delete(MessageCrt.delete);
+todoRuta.route('/todo/:id')
+    .get(todoCrt.findById)
+    .put(todoCrt.update)
+    .delete(todoCrt.delete);
 
-app.use('/api', messagesRuta);
+app.use('/api', todoRuta);
 
 
 //Socket
 io.on('connection', function (socket) {
-    var sala = socket.handshake.query.sala;
-    console.log("Alguien se conecto: " + sala);
-    socket.join(sala);
-    socket.to(sala).emit('messages', menssages);
+    var linea = socket.handshake.query.linea;
+    console.log("Alguien se conecto a Linea: " + linea);
+    socket.join(linea);
+    socket.to(linea).emit('messages', menssages);
 
     socket.on('new-menssage', function (data) {
         console.log("new-menssage:" + data.texto);
         menssages.push(data);
-        io.to(data.sala).emit('messages', menssages);
+        io.to(data.linea).emit('messages', menssages);
     })
 });
 

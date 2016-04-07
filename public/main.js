@@ -22,7 +22,7 @@ function addMenssage(e) {
         var payload = {
             autor:document.getElementById('usuario').value,
             text:document.getElementById('texto').value,
-            sala:document.getElementById('sala').value
+            linea:document.getElementById('linea').value
         };
 
     socket.emit('new-menssage',payload );
@@ -34,7 +34,7 @@ function  connect(e) {
 
     sala = document.getElementById('sala').value;
 
-    socket = io.connect('http://localhost:8000/', {forceNew:true, query:"sala=" + sala});
+    socket = io.connect('http://localhost:8000/', {forceNew:true, query:"linea=" + linea});
 
     socket.on('messages',function (data) {
         console.log(data);
