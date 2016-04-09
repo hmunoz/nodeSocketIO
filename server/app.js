@@ -13,7 +13,7 @@ var express         = require("express"),
 
 
 //Conectar a la DB
-mongoose.connect('mongodb://localhost/iot_dev', function (error,res) {
+mongoose.connect('mongodb://localhost/iot_dev_relaciones', function (error,res) {
     if (error) console.log("Error: Base de Datos" + error);
     else  console.log("Conectada a la Base Mongo");
 });
@@ -31,8 +31,12 @@ app.use(methodOverride());
 
 
 // Import Models and controllers
+
+var modelLineadb     = require('./models/lineadb')(app, mongoose);
 var modelTododb     = require('./models/tododb')(app, mongoose);
+
 var todoCrt = require('./controllers/todoCrt');
+var lineaCrt = require('./controllers/lineaCrt');
 
 
 
@@ -55,6 +59,16 @@ todoRuta.route('/todo/:id')
     .get(todoCrt.findById)
     .put(todoCrt.update)
     .delete(todoCrt.delete);
+
+todoRuta.route('/linea')
+    .get(lineaCrt.findAll)
+    .post(lineaCrt.add);
+
+todoRuta.route('/linea/:id')
+    .get(lineaCrt.findById)
+    .put(lineaCrt.update)
+    .delete(lineaCrt.delete);
+
 
 app.use('/api', todoRuta);
 

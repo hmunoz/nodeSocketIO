@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var Todo  = mongoose.model('Todo');
 var Linea  = mongoose.model('Linea');
 
 
@@ -16,26 +15,24 @@ function changeCrossControl(res){
 //GET - Return all tvshows in the DB
 exports.findAll = function(req, res) {
     changeCrossControl(res);
-    Todo.find(function(err, todos) {
+    Linea.find(function(err, resultados) {
         if(err) res.send(500, err.message);
-        console.log('GET /findAll')
-        Linea.populate(todos, {path: "linea"},function(err, todos){
-            res.status(200).send(todos);
-        });
+
+        console.log('GET /findAll' + resultados.toString())
+        res.status(200).jsonp(resultados);
     });
 };
 
-
 //GET - Return a TVShow with specified ID
 exports.findById = function(req, res) {
+
     changeCrossControl(res);
-    Todo.findById(req.params.id, function(err, todo) {
+
+    Linea.findById(req.params.id, function(err, resultado) {
         if(err) return res.send(500, err.message);
 
         console.log('GET /findById/' + req.params.id);
-        Linea.populate(todo, {path: "linea"},function(err, todo){
-            res.status(200).send(todo);
-        });
+        res.status(200).jsonp(resultado);
     });
 };
 
@@ -44,18 +41,17 @@ exports.findById = function(req, res) {
 //POST - Insert a new TVShow in the DB
 exports.add = function(req, res) {
     changeCrossControl(res);
-    console.log('POST');
-    console.log(req.body.linea);
 
-    var todo = new Todo({
-        autor:    req.body.autor,
-        texto: 	  req.body.texto,
-        linea: 	  req.body.linea
+    console.log('POST');
+    console.log(req.body.texto);
+
+    var entidad = new Linea({
+        texto:    req.body.texto
     });
 
-    todo.save(function(err, todo) {
+    entidad.save(function(err, resultado) {
         if(err) return res.send(500, err.message);
-        res.status(200).jsonp(todo);
+        res.status(200).jsonp(resultado);
     });
 };
 
@@ -64,7 +60,7 @@ exports.add = function(req, res) {
 exports.update = function(req, res) {
     changeCrossControl(res);
 
-    Todo.findById(req.params.id, function(err, todo) {
+    Linea.findById(req.params.id, function(err, todo) {
 
         todo.autor   = req.body.autor;
         todo.texto    = req.body.texto;
@@ -83,7 +79,7 @@ exports.delete = function(req, res) {
     changeCrossControl(res);
 
     console.log('DELETE /delete');
-    Todo.remove({ id: req.params.id}, function(err){
+    Linea.remove({ id: req.params.id}, function(err){
         if(err) return res.send(500, err.message);
         res.status(200);
     });
