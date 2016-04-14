@@ -85,11 +85,12 @@ exports.add = function(req, res) {
 
 
 exports.update = function(req, res) {
+    console.log('PUT/ update');
     Todo.findById(req.params.id, function(err, todo) {
-        todo.autor   = req.body.autor;
-        todo.texto    = req.body.texto;
-        todo.linea    = req.body.linea;
+
+        var todo = new Todo(req.body);
         
+        console.log(todo);
         todo.save(function(err) {
             if(err) return res.send(500, err.message);
             res.status(200).jsonp(todo);
