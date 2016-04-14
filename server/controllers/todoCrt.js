@@ -3,55 +3,78 @@ var Todo  = mongoose.model('Todo');
 var Linea  = mongoose.model('Linea');
 
 
-function changeCrossControl(res){
-    
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-    res.header("Access-Control-Max-Age", "3600");
-    res.header("Access-Control-Allow-Headers", "x-requested-with");
-    res.header("Content-Type", "application/x-www-form-urlencoded");
-
-}
-
-//GET - Return all tvshows in the DB
 exports.findAll = function(req, res) {
-    changeCrossControl(res);
-    Todo.find(function(err, todos) {
+   Todo.find(function(err, todos) {
         if(err) res.send(500, err.message);
         console.log('GET /findAll')
         Linea.populate(todos, {path: "linea"},function(err, todos){
-            res.status(200).send(todos);
+            res.status(200).jsonp(todos);
         });
     });
 };
 
 
-//GET - Return a TVShow with specified ID
+exports.findAllPag = function(req, res) {
+    var filtros = req.body;
+
+
+    var query = {};
+
+    try {
+        if (filtros["texto"] || filtros["texto"].value!='')
+        {
+            query = {texto:new RegExp(filtros.texto.value, 'i')};
+        }
+        if (filtros["autor"] || filtros["autor"].value!='')
+        {
+            query = {autor:new RegExp(filtros.autor.value, 'i')};
+        }
+        
+        if (filtros["linea.texto"] || filtros["linea.texto"].value!='')
+        {
+            console.log(filtros['linea.texto'].value);
+            
+            query = {linea: new Linea(filtros['linea.texto'].value) };
+        }
+    } catch(e) {
+        console.log(e);
+    }
+
+
+    
+    
+    var options = {
+        sort: { 'texto': 1 },
+        populate: 'linea',
+        lean: true,
+        page: req.params.pag,
+        limit: 10
+    };
+
+    Todo.paginate(query, options).then(function(result) {
+        res.status(200).jsonp(result);
+    });
+
+};
+
+
 exports.findById = function(req, res) {
-    changeCrossControl(res);
     Todo.findById(req.params.id, function(err, todo) {
         if(err) return res.send(500, err.message);
 
         console.log('GET /findById/' + req.params.id);
         Linea.populate(todo, {path: "linea"},function(err, todo){
-            res.status(200).send(todo);
+            res.status(200).jsonp(todo);
         });
     });
 };
 
 
-
-//POST - Insert a new TVShow in the DB
 exports.add = function(req, res) {
-    changeCrossControl(res);
     console.log('POST');
-    console.log(req.body.linea);
+    console.log(req.body);
 
-    var todo = new Todo({
-        autor:    req.body.autor,
-        texto: 	  req.body.texto,
-        linea: 	  req.body.linea
-    });
+    var todo = new Todo(req.body);
 
     todo.save(function(err, todo) {
         if(err) return res.send(500, err.message);
@@ -60,17 +83,13 @@ exports.add = function(req, res) {
 };
 
 
-//PUT - Update a register already exists
+
 exports.update = function(req, res) {
-    changeCrossControl(res);
-
     Todo.findById(req.params.id, function(err, todo) {
-
         todo.autor   = req.body.autor;
         todo.texto    = req.body.texto;
         todo.linea    = req.body.linea;
-
-
+        
         todo.save(function(err) {
             if(err) return res.send(500, err.message);
             res.status(200).jsonp(todo);
@@ -78,14 +97,14 @@ exports.update = function(req, res) {
     });
 };
 
-//DELETE - Delete a TVShow with specified ID
 exports.delete = function(req, res) {
-    changeCrossControl(res);
-
-    console.log('DELETE /delete');
-    Todo.remove({ id: req.params.id}, function(err){
-        if(err) return res.send(500, err.message);
-        res.status(200);
+    console.log('DELETE /delete:' + req.params.id);
+    Todo.remove({ _id: req.params.id}, function(err){
+        if(err) {
+            console.log(err.message);
+            return res.send(500, err.message);
+        }
+        console.log('Delete OK');
+        return res.status(200);
     });
-
 };

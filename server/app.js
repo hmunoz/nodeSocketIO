@@ -5,11 +5,16 @@ var express         = require("express"),
     app             = express(),
     bodyParser      = require("body-parser"),
     methodOverride  = require("method-override"),
+    mongoosePaginate = require('mongoose-paginate'),
     mongoose        = require('mongoose'),
     server = require('http').Server(app),
+    cors = require('cors'),
     io = require('socket.io')(server);
 
-
+mongoosePaginate.paginate.options = {
+    lean:  true,
+    limit: 10
+};
 
 
 //Conectar a la DB
@@ -24,16 +29,23 @@ var menssages = [];
 
 app.use(express.static('public'));
 
-// Middlewares
-app.use(bodyParser.urlencoded({ extended: false }));
+
+// use it before all route definitions
+app.use(cors({origin: '*'}));
+
+// Configurar app para usar bodyParser
+// con este paquete obtendremos
+// los datos enviados por POST
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(methodOverride());
+
 
 
 // Import Models and controllers
 
 var modelLineadb     = require('./models/lineadb')(app, mongoose);
-var modelTododb     = require('./models/tododb')(app, mongoose);
+var modelTododb     = require('./models/tododb')(app, mongoose, mongoosePaginate);
 
 var todoCrt = require('./controllers/todoCrt');
 var lineaCrt = require('./controllers/lineaCrt');
@@ -50,6 +62,10 @@ app.use(router);
 
 // API routes
 var todoRuta= express.Router();
+
+
+todoRuta.route('/todopag/:pag')
+    .put(todoCrt.findAllPag);
 
 todoRuta.route('/todo')
     .get(todoCrt.findAll)

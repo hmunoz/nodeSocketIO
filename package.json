@@ -7,14 +7,16 @@
     "start": "nodemon server/app.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "hmunoz@unrn.edu.ar",
+  "license": "MIT",
   "dependencies": {
+    "body-parser": "latest",
+    "cors": "^2.7.1",
     "express": "latest",
-    "socket.io": "latest",
-    "mongoose": "latest",
     "method-override": "latest",
-    "body-parser": "latest"
+    "mongoose": "latest",
+    "mongoose-paginate": "^5.0.0",
+    "socket.io": "latest"
   },
   "devDependencies": {
     "nodemon": "latest"
@@ -23,8 +25,6 @@
     "type": "git",
     "url": "git+https://github.com/hmunoz/nodeSocketIO.git"
   },
-  "author": "hmunoz@unrn.edu.ar",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/hmunoz/nodeSocketIO/issues"
   },

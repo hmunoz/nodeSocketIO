@@ -18,7 +18,7 @@ exports.findAll = function(req, res) {
     Linea.find(function(err, resultados) {
         if(err) res.send(500, err.message);
 
-        console.log('GET /findAll' + resultados.toString())
+        console.log('GET /findAll')
         res.status(200).jsonp(resultados);
     });
 };
