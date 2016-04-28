@@ -17,6 +17,7 @@ exports.findAll = function(req, res) {
 exports.findAllPag = function(req, res) {
     var filtros = req.body;
 
+    console.log(req.body);
 
     var query = {};
 
@@ -30,12 +31,7 @@ exports.findAllPag = function(req, res) {
             query = {autor:new RegExp(filtros.autor.value, 'i')};
         }
         
-        if (filtros["linea.texto"] || filtros["linea.texto"].value!='')
-        {
-            console.log(filtros['linea.texto'].value);
-            
-            query = {linea: new Linea(filtros['linea.texto'].value) };
-        }
+
     } catch(e) {
         console.log(e);
     }
@@ -89,7 +85,7 @@ exports.update = function(req, res) {
     Todo.findById(req.params.id, function(err, todo) {
 
         var todo = new Todo(req.body);
-        
+
         console.log(todo);
         todo.save(function(err) {
             if(err) return res.send(500, err.message);
@@ -100,12 +96,11 @@ exports.update = function(req, res) {
 
 exports.delete = function(req, res) {
     console.log('DELETE /delete:' + req.params.id);
-    Todo.remove({ _id: req.params.id}, function(err){
-        if(err) {
-            console.log(err.message);
-            return res.send(500, err.message);
-        }
-        console.log('Delete OK');
-        return res.status(200);
+    Todo.findById(req.params.id, function(err, todo) {
+
+        todo.remove(function(err) {
+            if(err) return res.send(500, err.message);
+            res.status(200).jsonp(todo);
+        });
     });
 };
